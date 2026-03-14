@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
@@ -7,6 +7,7 @@ app = Flask(__name__)
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'temporary_secret_key_for_admin_login'
 
 db = SQLAlchemy(app)
 
@@ -62,17 +63,37 @@ def success():
     feedback = Feedback.query.get_or_404(feedback_id)
     return render_template('success.html', feedback=feedback)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == 'admin' and password == 'admin123':
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            return render_template('login.html', error="Invalid username or password")
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('home'))
+
 @app.route('/admin')
 def admin():
-    password = request.args.get('password')
-    if password != 'admin123':
-        return "Unauthorized. Please append ?password=admin123 to the URL.", 401
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('login'))
     
     submissions = Feedback.query.order_by(Feedback.submitted_at.desc()).all()
     return render_template('admin.html', submissions=submissions)
 
 @app.route('/update-status', methods=['POST'])
 def update_status():
+    if not session.get('admin_logged_in'):
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+
     feedback_id = request.form.get('id')
     if not feedback_id:
         return jsonify({'success': False, 'message': 'Missing ID'}), 400
