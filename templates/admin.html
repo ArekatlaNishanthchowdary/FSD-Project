@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<section class="card shadow border-0 rounded-3">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0 text-primary fw-bold">All Submissions</h4>
+        <span class="badge bg-primary rounded-pill">{{ submissions|length }} Total</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Category</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in submissions %}
+                    <tr id="row-{{ item.id }}">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.department }}</td>
+                        <td><span class="badge bg-{{ 'info' if item.category == 'Feedback' else 'secondary' }} text-white">{{ item.category }}</span></td>
+                        <td><small>{{ item.message[:50] }}{% if item.message|length > 50 %}...{% endif %}</small></td>
+                        <td><small>{{ item.submitted_at.strftime('%Y-%m-%d %H:%M') }}</small></td>
+                        <td>
+                            <span id="status-badge-{{ item.id }}" class="badge bg-{{ 'warning text-dark' if item.status == 'Pending' else 'success' }}">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if item.status == 'Pending' %}
+                            <button class="btn btn-sm btn-outline-success mark-resolved-btn" data-id="{{ item.id }}">Mark Resolved</button>
+                            {% else %}
+                            <button class="btn btn-sm btn-success disabled">Resolved</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted">No submissions found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Success Toast for Status Update -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="statusToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Status updated to Resolved!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
