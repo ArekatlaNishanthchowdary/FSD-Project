@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Submission Successful{% endblock %}
+
+{% block content %}
+<section class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="alert alert-success shadow-sm" role="alert">
+            <h4 class="alert-heading fw-bold mb-3">Your submission was received!</h4>
+            <p>Thank you, <strong>{{ feedback.name }}</strong>. We have received your {{ feedback.category|lower }}.</p>
+            <hr>
+            <h5 class="mb-3">Submission Details:</h5>
+            <ul class="list-group list-group-flush mb-4 rounded">
+                <li class="list-group-item bg-transparent"><strong>Name:</strong> {{ feedback.name }}</li>
+                <li class="list-group-item bg-transparent"><strong>Email:</strong> {{ feedback.email }}</li>
+                <li class="list-group-item bg-transparent"><strong>Department:</strong> {{ feedback.department }}</li>
+                <li class="list-group-item bg-transparent"><strong>Category:</strong> <span class="badge bg-{{ 'info' if feedback.category == 'Feedback' else 'warning' }}">{{ feedback.category }}</span></li>
+                <li class="list-group-item bg-transparent"><strong>Message:</strong> <br>{{ feedback.message }}</li>
+            </ul>
+            <a href="{{ url_for('home') }}" class="btn btn-success">Go Back</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
