@@ -1,4 +1,27 @@
 $(document).ready(function() {
+    // Theme Switcher Logic
+    const themeToggle = $('#themeToggle');
+    const updateThemeIcon = (theme) => {
+        if (theme === 'dark') {
+            themeToggle.html('☀️ Light Mode');
+        } else {
+            themeToggle.html('🌙 Dark Mode');
+        }
+    };
+
+    // Initial icon state
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+    updateThemeIcon(currentTheme);
+
+    themeToggle.on('click', function() {
+        const currentDataTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+        const newTheme = currentDataTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-bs-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+    });
+
     // Form Validation Logic
     $('#feedbackForm').on('submit', function(e) {
         let isValid = true;
