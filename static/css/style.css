@@ -1,13 +1,164 @@
+:root {
+    --primary-color: #4361ee;
+    --primary-hover: #3a56d4;
+    --secondary-color: #7209b7;
+    --bg-light: #f8f9fa;
+    --bg-dark: #0f172a;
+    --card-bg-light: #ffffff;
+    --card-bg-dark: #1e293b;
+    --text-light: #1e293b;
+    --text-dark: #f8f9fa;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    color-scheme: light;
+}
+
+[data-bs-theme="dark"] {
+    --bg-light: var(--bg-dark);
+    --card-bg-light: var(--card-bg-dark);
+    --text-light: var(--text-dark);
+    --glass-bg: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    color-scheme: dark;
+}
+
+[data-bs-theme="dark"] .bg-white,
+[data-bs-theme="dark"] .card-header.bg-white {
+    background-color: var(--card-bg-dark) !important;
+    color: var(--text-dark) !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-light.text-dark {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-dark) !important;
+}
+
+[data-bs-theme="dark"] .table {
+    color: var(--text-dark);
+}
+
+[data-bs-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+[data-bs-theme="dark"] .bg-light {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: #1e293b !important; /* Solid background for better browser compatibility */
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-dark) !important;
+}
+
+[data-bs-theme="dark"] .form-select option {
+    background-color: #111827;
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+[data-bs-theme="dark"] .bg-light-subtle {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-primary.bg-opacity-10 {
+    background-color: rgba(67, 97, 238, 0.2) !important;
+    color: #818cf8 !important; /* Lighter blue for better contrast */
+}
+
 body {
+    font-family: 'Outfit', sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar {
+    background-color: var(--glass-bg);
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.card {
+    background-color: var(--card-bg-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.text-primary {
+    color: var(--primary-color);
+}
+
+.bg-primary {
+    background-color: var(--primary-color);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+}
+
+.rounded-4 {
+    border-radius: 1rem !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+main > .container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 .invalid-feedback {
     display: none;
-    font-size: 0.875em;
-    color: #dc3545;
+    font-size: 0.825em;
+    color: #ef4444;
     margin-top: 0.25rem;
 }
 
@@ -16,19 +167,5 @@ body {
 }
 
 .is-invalid {
-    border-color: #dc3545;
-}
-
-.is-invalid:focus {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-}
-
-.bg-transparent {
-    background-color: transparent !important;
-}
-
-/* Smooth table hover effect */
-.table-hover tbody tr {
-    transition: background-color 0.2s ease;
+    border-color: #ef4444 !important;
 }

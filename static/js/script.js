@@ -1,11 +1,13 @@
 $(document).ready(function() {
     // Theme Switcher Logic
     const themeToggle = $('#themeToggle');
+    const themeIcon = themeToggle.find('i');
+    
     const updateThemeIcon = (theme) => {
         if (theme === 'dark') {
-            themeToggle.html('☀️ Light Mode');
+            themeIcon.removeClass('fa-moon').addClass('fa-sun');
         } else {
-            themeToggle.html('🌙 Dark Mode');
+            themeIcon.removeClass('fa-sun').addClass('fa-moon');
         }
     };
 
@@ -13,7 +15,8 @@ $(document).ready(function() {
     const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
     updateThemeIcon(currentTheme);
 
-    themeToggle.on('click', function() {
+    themeToggle.on('click', function(e) {
+        e.preventDefault();
         const currentDataTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
         const newTheme = currentDataTheme === 'dark' ? 'light' : 'dark';
         
@@ -29,14 +32,13 @@ $(document).ready(function() {
         // Clear previous validation states
         $('.form-control, .form-select, .form-check-input').removeClass('is-invalid');
         
-        // 1. Name validation
+        // Validation logic
         const name = $('#name').val().trim();
         if (name === '') {
             $('#name').addClass('is-invalid');
             isValid = false;
         }
         
-        // 2. Email validation
         const email = $('#email').val().trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (email === '' || !emailRegex.test(email)) {
@@ -44,20 +46,6 @@ $(document).ready(function() {
             isValid = false;
         }
         
-        // 3. Department validation
-        const department = $('#department').val();
-        if (department === '') {
-            $('#department').addClass('is-invalid');
-            isValid = false;
-        }
-        
-        // 4. Category validation
-        if (!$('input[name="category"]:checked').val()) {
-            $('input[name="category"]').addClass('is-invalid');
-            isValid = false;
-        }
-        
-        // 5. Message validation (min 20 chars)
         const message = $('#message').val().trim();
         if (message.length < 20) {
             $('#message').addClass('is-invalid');
@@ -65,40 +53,26 @@ $(document).ready(function() {
         }
         
         if (!isValid) {
-            e.preventDefault(); // Stop submission
-            
-            // Show toast error
+            e.preventDefault();
             const toastEl = document.getElementById('validationToast');
             if (toastEl) {
                 const toast = new bootstrap.Toast(toastEl);
                 toast.show();
             }
             
-            // Shake effect for the form
-            $('#feedbackForm').closest('.card').animate({ left: '-10px' }, 50)
-                .animate({ left: '10px' }, 50)
-                .animate({ left: '-10px' }, 50)
-                .animate({ left: '10px' }, 50)
-                .animate({ left: '0px' }, 50);
+            // Subtle card shake
+            const card = $(this).closest('.card');
+            card.addClass('shake');
+            setTimeout(() => card.removeClass('shake'), 400);
         }
     });
 
-    // Remove is-invalid class on input change
-    $('.form-control, .form-select').on('input change', function() {
-        $(this).removeClass('is-invalid');
-    });
-    
-    $('input[type="radio"]').on('change', function() {
-        $('input[name="' + $(this).attr('name') + '"]').removeClass('is-invalid');
-    });
-
     // Admin Page: Mark Resolved via AJAX
-    $('.mark-resolved-btn').on('click', function() {
+    $(document).on('click', '.mark-resolved-btn', function() {
         const btn = $(this);
         const id = btn.data('id');
         
-        // Prepare to send AJAX request
-        btn.prop('disabled', true).text('Updating...');
+        btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Updating...');
         
         $.ajax({
             url: '/update-status',
@@ -106,27 +80,22 @@ $(document).ready(function() {
             data: { id: id },
             success: function(response) {
                 if (response.success) {
-                    // Update UI on success
                     const badge = $('#status-badge-' + id);
                     
-                    // Fade out, update content and classes, fade in
                     badge.fadeOut(200, function() {
                         $(this).removeClass('bg-warning text-dark')
-                               .addClass('bg-success')
+                               .addClass('bg-success text-white')
                                .text('Resolved')
                                .fadeIn(200);
                     });
                     
-                    // Update button
                     btn.fadeOut(200, function() {
                         $(this).removeClass('btn-outline-success')
                                .addClass('btn-success disabled')
                                .text('Resolved')
-                               .off('click')
                                .fadeIn(200);
                     });
                     
-                    // Show success toast
                     const toastEl = document.getElementById('statusToast');
                     if (toastEl) {
                         const toast = new bootstrap.Toast(toastEl);
@@ -142,5 +111,44 @@ $(document).ready(function() {
                 btn.prop('disabled', false).text('Mark Resolved');
             }
         });
+    });
+
+    // Admin Page: View Details Modal logic
+    $(document).on('click', '.view-details-btn', function() {
+        const btn = $(this);
+        const name = btn.data('name');
+        const email = btn.data('email');
+        const dept = btn.data('dept');
+        const cat = btn.data('cat');
+        const msg = btn.data('msg');
+        const date = btn.data('date');
+        const status = btn.data('status');
+        
+        // Populate modal
+        $('#modal-name').text(name);
+        $('#modal-email').text(email);
+        $('#modal-dept').text(dept);
+        $('#modal-cat').text(cat);
+        $('#modal-msg').text(msg);
+        $('#modal-date').text(date);
+        $('#modal-status').text(status);
+        $('#modal-avatar span').text(name.substring(0, 1).toUpperCase());
+        
+        // Handle badge colors in modal
+        if (cat === 'Complaint') {
+            $('#modal-cat').removeClass('bg-info text-info').addClass('bg-danger text-danger bg-opacity-10');
+        } else {
+            $('#modal-cat').removeClass('bg-danger text-danger bg-opacity-10').addClass('bg-info text-info');
+        }
+        
+        if (status === 'Pending') {
+            $('#modal-status').removeClass('bg-success text-white').addClass('bg-warning text-dark');
+        } else {
+            $('#modal-status').removeClass('bg-warning text-dark').addClass('bg-success text-white');
+        }
+        
+        // Show modal
+        const myModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        myModal.show();
     });
 });
