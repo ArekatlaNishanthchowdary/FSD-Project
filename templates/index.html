@@ -1,77 +1,109 @@
 {% extends "base.html" %}
 
-{% block title %}Submit Feedback or Complaint{% endblock %}
+{% block title %}Share Your Feedback - Student Portal{% endblock %}
 
 {% block content %}
 <section class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow border-0 rounded-3">
-            <div class="card-header bg-white text-center py-3">
-                <h4 class="mb-0 text-primary fw-bold">Feedback & Complaint Form</h4>
+    <div class="col-lg-10">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <h6 class="text-primary fw-bold text-uppercase mb-3 tracking-widest" style="letter-spacing: 2px;">Your Voice Matters</h6>
+                <h1 class="display-4 fw-bold mb-4">Help us Build a <span class="text-primary">Better Campus</span> Experience.</h1>
+                <p class="lead text-muted mb-5">Whether it's a suggestion for improvement or a complaint that needs attention, we're here to listen and act. Your feedback is the catalyst for our growth.</p>
+                
+                <div class="row g-4">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary bg-opacity-10 rounded-3 p-3 text-primary me-3">
+                                <i class="fas fa-bolt fa-lg"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold">Quick</h5>
+                                <p class="small text-muted mb-0">Resolved in 48h</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary bg-opacity-10 rounded-3 p-3 text-primary me-3">
+                                <i class="fas fa-shield-alt fa-lg"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold">Secure</h5>
+                                <p class="small text-muted mb-0">Privacy protected</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
-                <form id="feedbackForm" action="{{ url_for('submit') }}" method="POST">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                        <div class="invalid-feedback">Please enter your full name.</div>
+            
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-white border-0 py-4 px-4">
+                        <h4 class="mb-0 fw-bold">Feedback Form</h4>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    <div class="card-body p-4 pt-0">
+                        <form id="feedbackForm" action="{{ url_for('submit') }}" method="POST">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label small fw-bold">Full Name</label>
+                                    <input type="text" class="form-control bg-light border-0 py-2" id="name" name="name" 
+                                           value="{{ session.get('username', '') }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label small fw-bold">Email Address</label>
+                                    <input type="email" class="form-control bg-light border-0 py-2" id="email" name="email" 
+                                           value="{{ session.get('email', '') }}" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="department" class="form-label small fw-bold">Department</label>
+                                    <select class="form-select bg-light border-0 py-2" id="department" name="department" required>
+                                        <option value="">Select Department</option>
+                                        <option value="CSE">CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="MBA">MBA</option>
+                                        <option value="Civil">Civil</option>
+                                        <option value="Mechanical">Mechanical</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-bold d-block">Submission Type</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="category" id="typeFeedback" value="Feedback" checked required>
+                                        <label class="form-check-label" for="typeFeedback">Feedback</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="category" id="typeComplaint" value="Complaint">
+                                        <label class="form-check-label" for="typeComplaint">Complaint</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="message" class="form-label small fw-bold">Detailed Message</label>
+                                    <textarea class="form-control bg-light border-0" id="message" name="message" rows="4" placeholder="Minimum 20 characters..." required></textarea>
+                                    <div class="invalid-feedback">Message must be at least 20 characters.</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-3 mt-4 fw-bold rounded-3 shadow-sm">
+                                Submit Feedback <i class="fas fa-paper-plane ms-2"></i>
+                            </button>
+                        </form>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="department" class="form-label">Department</label>
-                        <select class="form-select" id="department" name="department" required>
-                            <option value="">Select Department</option>
-                            <option value="CSE">CSE</option>
-                            <option value="ECE">ECE</option>
-                            <option value="MBA">MBA</option>
-                            <option value="Civil">Civil</option>
-                            <option value="Mechanical">Mechanical</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a department.</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label d-block">Type</label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="category" id="typeFeedback" value="Feedback" required>
-                            <label class="form-check-label" for="typeFeedback">Feedback</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="category" id="typeComplaint" value="Complaint">
-                            <label class="form-check-label" for="typeComplaint">Complaint</label>
-                        </div>
-                        <div class="invalid-feedback">Please select a type.</div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="message" class="form-label">Message (Min 20 characters)</label>
-                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-                        <div class="invalid-feedback">Message must be at least 20 characters long.</div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100 py-2">Submit</button>
-                    
-                    <!-- Toast container -->
-                    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                      <div id="validationToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                          <div class="toast-body">
-                            Please fix the errors in the form before submitting.
-                          </div>
-                          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                      </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Toast container -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="validationToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Please ensure all fields are correctly filled (Min 20 chars for message).
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 {% endblock %}
