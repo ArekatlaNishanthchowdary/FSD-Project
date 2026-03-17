@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Login - Student Portal{% endblock %}
+{% block title %}Register - Student Portal{% endblock %}
 
 {% block content %}
 <section class="row justify-content-center">
     <div class="col-md-5 col-lg-4">
         <div class="card shadow border-0 rounded-4 overflow-hidden">
             <div class="card-header bg-primary text-white text-center py-4">
-                <h3 class="mb-0 fw-bold">Welcome Back</h3>
-                <p class="mb-0 opacity-75">Login to your account</p>
+                <h3 class="mb-0 fw-bold">Join Us</h3>
+                <p class="mb-0 opacity-75">Create your student account</p>
             </div>
             <div class="card-body p-4 p-lg-5">
                 {% if error %}
@@ -18,19 +18,23 @@
                 </div>
                 {% endif %}
                 
-                <form action="{{ url_for('login') }}" method="POST">
+                <form action="{{ url_for('register') }}" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label small fw-bold">Username</label>
-                        <input type="text" class="form-control form-control-lg bg-light border-0" id="username" name="username" placeholder="Your username" required>
+                        <input type="text" class="form-control form-control-lg bg-light border-0" id="username" name="username" placeholder="Choose a username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label small fw-bold">Email Address</label>
+                        <input type="email" class="form-control form-control-lg bg-light border-0" id="email" name="email" placeholder="name@example.com" required>
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label small fw-bold">Password</label>
                         <input type="password" class="form-control form-control-lg bg-light border-0" id="password" name="password" placeholder="••••••••" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm">Login</button>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm">Register</button>
                     
                     <div class="text-center mt-4">
-                        <p class="mb-0 text-muted">Don't have an account? <a href="{{ url_for('register') }}" class="text-primary fw-bold text-decoration-none">Register</a></p>
+                        <p class="mb-0 text-muted">Already have an account? <a href="{{ url_for('login') }}" class="text-primary fw-bold text-decoration-none">Login</a></p>
                     </div>
                 </form>
             </div>
